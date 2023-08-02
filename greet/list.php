@@ -157,7 +157,6 @@
 				<div id="page_num"> ◀ 이전 &nbsp;&nbsp;&nbsp;&nbsp; 
 <?
    // 게시판 목록 하단에 페이지 링크 번호 출력
-<?
    // 게시판 목록 하단에 페이지 링크 번호 출력
    for ($i=1; $i<=$total_page; $i++)
    {
