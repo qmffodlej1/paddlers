@@ -1,8 +1,8 @@
 <?php
 $host = "localhost"; // 호스트 주소
-$user = "paddler"; // 데이터베이스 사용자명
+$user = "paddlers"; // 데이터베이스 사용자명
 $password = "qhdks12"; // 데이터베이스 비밀번호
-$db = "db_home"; // 데이터베이스 이름
+$db = "paddlers"; // 데이터베이스 이름
 // $page = 1;
 
 $connect = new mysqli($host, $user, $password, $db);
