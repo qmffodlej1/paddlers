@@ -52,6 +52,7 @@ if (isset($_SESSION['userid']))
 		");
 	 exit;
 	}
+	$file_name = preg_replace('/[^A-Za-z0-9_]/', '', $upfile_name[$i]);
 
 	$regist_day = date("Y-m-d (H:i)");  // 현재의 '년-월-일-시-분'을 저장
 
@@ -89,30 +90,56 @@ if (isset($_SESSION['userid']))
 				exit;
 			}
 
-			if ( ($upfile_type[$i] != "image/gif") &&
-				($upfile_type[$i] != "image/jpeg") &&
-				($upfile_type[$i] != "image/pjpeg") &&
-				($upfile_type[$i] != "image/png"))
-			{
-				echo("
-					<script>
-						alert('JPG와 GIF 이미지 파일만 업로드 가능합니다!');
-						history.go(-1)
-					</script>
-					");
-				exit;
-			}
+        // 추가된 부분: 이미지 파일인지 확인
+		$lowercase_upfile_type = strtolower($upfile_type[$i]);
+        $allowed_image_types = array("image/gif", "image/jpeg", "image/pjpeg", "image/png", "image/jpg");
+        if (in_array($upfile_type[$i], $allowed_image_types)) {
+            if (!move_uploaded_file($upfile_tmp_name[$i], $uploaded_file[$i])) {
+                echo("
+                    <script>
+                    alert('파일을 지정한 디렉토리에 복사하는데 실패했습니다.');
+                    history.go(-1)
+                    </script>
+                ");
+                exit;
+            }
+        } else {
+            echo("
+                <script>
+                alert('JPG와 GIF 이미지 파일만 업로드 가능합니다!');
+                history.go(-1)
+                </script>
+            ");
+            exit;
+        }
+    
 
-			if (!move_uploaded_file($upfile_tmp_name[$i], $uploaded_file[$i]) )
-			{
-				echo("
-					<script>
-					alert('파일을 지정한 디렉토리에 복사하는데 실패했습니다.');
-					history.go(-1)
-					</script>
-				");
-				exit;
-			}
+
+
+			// if ( ($upfile_type[$i] != "image/gif") &&
+			// 	($upfile_type[$i] != "image/jpeg") &&
+			// 	($upfile_type[$i] != "image/pjpeg") &&
+			// 	($upfile_type[$i] != "image/png"))
+			// {
+			// 	echo("
+			// 		<script>
+			// 			alert('JPG와 GIF 이미지 파일만 업로드 가능합니다!');
+			// 			history.go(-1)
+			// 		</script>
+			// 		");
+			// 	exit;
+			// }
+
+			// if (!move_uploaded_file($upfile_tmp_name[$i], $uploaded_file[$i]) )
+			// {
+			// 	echo("
+			// 		<script>
+			// 		alert('파일을 지정한 디렉토리에 복사하는데 실패했습니다.');
+			// 		history.go(-1)
+			// 		</script>
+			// 	");
+			// 	exit;
+			// }
 		}
 	}
 
@@ -120,9 +147,6 @@ if (isset($_SESSION['userid']))
 
  	if ($mode=="modify")
 	{
-		$content = htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
-		$subject = htmlspecialchars($subject, ENT_QUOTES, 'UTF-8');
-
 		if(isset($_POST['del_file']) && empty($_POST['del_file'])) {
 		$num_checked = count($_POST['del_file']);
 		$position = $_POST['del_file'];
@@ -178,10 +202,7 @@ if (isset($_SESSION['userid']))
 		else
 		{
 			$is_html = "";
-			// $content = htmlspecialchars($content);
-			$content = htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
-			$subject = htmlspecialchars($subject, ENT_QUOTES, 'UTF-8');
-	
+			$content = htmlspecialchars($content);
 		}
 
 		$sql = "insert into $table (id, name, nick, subject, content, regist_day, hit, is_html, ";
