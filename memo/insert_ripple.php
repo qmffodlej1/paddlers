@@ -9,11 +9,15 @@
 }
 $table = "memo";
 $num = $_POST['num'];
-$ripple_content = $_POST['ripple_content'];
+$ripple_content = isset($_POST['ripple_content']) ? htmlspecialchars($_POST['ripple_content'], ENT_QUOTES, 'UTF-8') : '';
+// $ripple_content = $_POST['ripple_content'];
 if (isset($_GET['mode'])) {
 $mode = $_GET['mode'];
-$find = $_POST['find'];
-$search = $_POST['search'];
+// $find = $_POST['find'];
+// $search = $_POST['search'];
+$find = isset($_POST['find']) ? $_POST['find'] : '';
+$search = isset($_POST['search']) ? $_POST['search'] : '';
+
 }?>
 <meta charset="utf-8">
 <?
@@ -42,8 +46,11 @@ $search = $_POST['search'];
    $sql = "select * from member where id='$userid'";
    $result = $connect->query($sql);
    $row = $result->fetch_array(MYSQLI_ASSOC);
-   $name = $row['name'];
-   $nick = $row['nick'];
+  //  $name = $row['name'];
+  //  $nick = $row['nick'];
+	$name = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
+	$nick = htmlspecialchars($row['nick'], ENT_QUOTES, 'UTF-8');
+	$ripple_content = htmlspecialchars($ripple_content, ENT_QUOTES, 'UTF-8');
 
    $regist_day = date("Y-m-d (H:i)");  // 현재의 '년-월-일-시-분'을 저장
 
