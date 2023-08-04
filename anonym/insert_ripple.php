@@ -25,6 +25,7 @@
 	 exit;
    }   
    include "../lib/dbconn.php";       // dconn.php 파일을 불러옴
+   $ripple_content = htmlspecialchars($ripple_content, ENT_QUOTES, 'UTF-8');
 
    $regist_day = date("Y-m-d (H:i)");  // 현재의 '년-월-일-시-분'을 저장
 

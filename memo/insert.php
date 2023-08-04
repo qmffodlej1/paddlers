@@ -7,7 +7,7 @@ if (isset($_SESSION['userid']))
         $userlevel = $_SESSION['userlevel'];
 }
 $table = "memo";
-$content = isset($_POST['content']) ? htmlspecialchars($_POST['content'], ENT_QUOTES, 'UTF-8') : '';
+$content = $_POST['content'];
 if (isset($_GET['mode'])) {
 $mode = $_GET['mode'];
 $find = isset($_POST['find']) ? $_POST['find'] : '';
@@ -40,8 +40,8 @@ $search = isset($_POST['search']) ? $_POST['search'] : '';
 	include "../lib/dbconn.php";       // dconn.php 파일을 불러옴
 
 	// 데이터베이스에 삽입하기 전에 데이터 처리
-	$name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
-	$nick = htmlspecialchars($nick, ENT_QUOTES, 'UTF-8');
+	// $name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
+	// $nick = htmlspecialchars($nick, ENT_QUOTES, 'UTF-8');
 	$content = htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
 	
 	$sql = "select * from member where id='$userid'";

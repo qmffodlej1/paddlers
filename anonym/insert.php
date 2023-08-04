@@ -120,6 +120,9 @@ if (isset($_SESSION['userid']))
 
  	if ($mode=="modify")
 	{
+		$content = htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
+		$subject = htmlspecialchars($subject, ENT_QUOTES, 'UTF-8');
+
 		if(isset($_POST['del_file']) && empty($_POST['del_file'])) {
 		$num_checked = count($_POST['del_file']);
 		$position = $_POST['del_file'];
@@ -175,7 +178,10 @@ if (isset($_SESSION['userid']))
 		else
 		{
 			$is_html = "";
-			$content = htmlspecialchars($content);
+			// $content = htmlspecialchars($content);
+			$content = htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
+			$subject = htmlspecialchars($subject, ENT_QUOTES, 'UTF-8');
+
 		}
 
 		$sql = "insert into $table (id, name, nick, subject, content, regist_day, hit, is_html, ";

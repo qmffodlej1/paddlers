@@ -98,7 +98,11 @@
 	}
 
 	include "../lib/dbconn.php"; // dconn.php 파일을 불러옴
-	if ($mode == "modify") {
+	if ($mode == "modify")
+	 {
+		$content = htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
+		$subject = htmlspecialchars($subject, ENT_QUOTES, 'UTF-8');
+
 		if(isset($_POST['del_file']) && empty($_POST['del_file'])) {
 		$num_checked = count($_POST['del_file']);
 		$position = $_POST['del_file'];
@@ -138,6 +142,9 @@
 		$sql = "update $table set subject='$subject', content='$content' where num=$num";
 		$connect->query($sql); // 데이터베이스 연결 객체를 사용하여 쿼리 실행
 	} else {
+		$content = htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
+		$subject = htmlspecialchars($subject, ENT_QUOTES, 'UTF-8');
+
 		$sql = "insert into $table (id, name, nick, subject, content, regist_day, hit, ";
 		$sql .= " file_name_0, file_name_1, file_name_2, file_type_0, file_type_1, file_type_2, file_copied_0,  file_copied_1, file_copied_2) ";
 		$sql .= " values('$userid', '$username', '$usernick', '$subject', '$content', '$regist_day', 0, ";

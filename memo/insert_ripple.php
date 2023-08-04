@@ -9,7 +9,7 @@
 }
 $table = "memo";
 $num = $_POST['num'];
-$ripple_content = isset($_POST['ripple_content']) ? htmlspecialchars($_POST['ripple_content'], ENT_QUOTES, 'UTF-8') : '';
+$ripple_content = $_POST['ripple_content'];
 // $ripple_content = $_POST['ripple_content'];
 if (isset($_GET['mode'])) {
 $mode = $_GET['mode'];
