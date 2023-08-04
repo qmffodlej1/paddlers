@@ -70,14 +70,7 @@ $data = $pdo->prepare('SELECT * from member WHERE id = (:id);');
 $data->bindParam( ':id', $id, PDO::PARAM_STR );
 $data->execute(); // 실패시 실패 카운트 증가
 $row = $data->fetch();
-?>    <script>
-// PHP로 가져온 데이터를 JavaScript 변수에 할당
-var rowData = <?php echo json_encode($row); ?>;
-// rowData를 alert로 출력
-alert(JSON.stringify(rowData));
-</script>
-<?
-  if(isset($row['id'])) {
+  if(!isset($row['id'])) {
     echo("
       <script>
         window.alert('등록되지 않은 아이디입니다.')
