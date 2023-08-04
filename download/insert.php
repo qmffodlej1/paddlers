@@ -58,6 +58,10 @@
 
 	$copied_file_name = array(); // $copied_file_name 배열을 초기화
 
+	$allowed_extensions = array("zip"); // 허용된 확장자 리스트에 zip 확장자 추가
+
+	$file_name = preg_replace('/[^A-Za-z0-9_]/', '', $upfile_name[$i]);
+
 	for ($i = 0; $i < $count; $i++) {
 		$upfile_name[$i]     = $files["name"][$i];
 		$upfile_tmp_name[$i] = $files["tmp_name"][$i];
@@ -65,10 +69,28 @@
 		$upfile_size[$i]     = $files["size"][$i];
 		$upfile_error[$i]    = $files["error"][$i];
 
+		if ($upfile_error[$i] === UPLOAD_ERR_NO_FILE) {
+			// 파일이 없을 경우, 처리를 원하는 방식으로 작성
+			$copied_file_name[$i] = "";
+			continue; // 다음 파일로 넘어감
+		}
+
+
 		$file = explode(".", $upfile_name[$i]);
 		@$file_name = $file[0];
-		@$file_ext  = $file[1];
+		@$file_ext  = strtolower($file[1]);
 
+		
+	    if (!in_array($file_ext, $allowed_extensions)) {
+			echo("
+			<script>
+			alert('허용되지 않는 파일 형식입니다. Zip 파일만 업로드 가능합니다.');
+			history.go(-1)
+			</script>
+			");
+			exit;
+		}
+	
 		if (!$upfile_error[$i]) {
 			$new_file_name = date("Y_m_d_H_i_s");
 			$new_file_name = $new_file_name . "_" . $i;
@@ -98,11 +120,7 @@
 	}
 
 	include "../lib/dbconn.php"; // dconn.php 파일을 불러옴
-	if ($mode == "modify")
-	 {
-		$content = htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
-		$subject = htmlspecialchars($subject, ENT_QUOTES, 'UTF-8');
-
+	if ($mode == "modify") {
 		if(isset($_POST['del_file']) && empty($_POST['del_file'])) {
 		$num_checked = count($_POST['del_file']);
 		$position = $_POST['del_file'];
@@ -142,9 +160,6 @@
 		$sql = "update $table set subject='$subject', content='$content' where num=$num";
 		$connect->query($sql); // 데이터베이스 연결 객체를 사용하여 쿼리 실행
 	} else {
-		$content = htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
-		$subject = htmlspecialchars($subject, ENT_QUOTES, 'UTF-8');
-
 		$sql = "insert into $table (id, name, nick, subject, content, regist_day, hit, ";
 		$sql .= " file_name_0, file_name_1, file_name_2, file_type_0, file_type_1, file_type_2, file_copied_0,  file_copied_1, file_copied_2) ";
 		$sql .= " values('$userid', '$username', '$usernick', '$subject', '$content', '$regist_day', 0, ";
