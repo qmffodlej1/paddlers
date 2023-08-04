@@ -77,13 +77,17 @@ create table member (
   name  char(10) not null,
   nick  char(10) not null,
   hp    char(20)  not null,
-  email char(80),
   regist_day char(20),
   level int,
-  last_login TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  failed_login INT(3),
   primary key(id)
-  );create table memo (
+  );
+CREATE TABLE login_attempts (
+  id         CHAR(15) NOT NULL,
+  fail_count INT default 0,
+  lock_time  TIMESTAMP default 0,
+  FOREIGN KEY (id) REFERENCES member(id)
+);
+create table memo (
    num int not null auto_increment,
    id char(15) not null,
    name  char(10) not null,
