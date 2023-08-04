@@ -50,53 +50,31 @@ if (isset($_SESSION['userid'])) {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $target = $_POST["order"];
         $target = htmlspecialchars($target, ENT_QUOTES, 'UTF-8');
-        $target = addslashes($target);
-        $target = escapeshellarg($target);
-        $substitutions = array(
-            '&'  => '',
-            ';'  => '',
-            '| ' => '',
-            '-'  => '',
-            '$'  => '',
-            '('  => '',
-            ')'  => '',
-            '`'  => '',
-            '||' => '',
-        );
-        $target = str_replace( array_keys( $substitutions ), $substitutions, $target );
-        // $target = $_POST["order"];
-        ?>
-
-        <h2>Base64 Encoding:</h2>
-        <?php
-        $base64_cmd = shell_exec('base64 <<<' . $target);
-        echo "<pre>{$base64_cmd}</pre>";
-        ?>
-
-        <h2>MD5 Hash:</h2>
-        <?php
-        $md5_cmd = shell_exec('md5sum <<<' . $target);
-        echo "<pre>{$md5_cmd}</pre>";
-        ?>
-
-        <h2>SHA-256 Hash:</h2>
-        <?php
-        $sha256_cmd = shell_exec('sha256sum <<<' . $target);
-        echo "<pre>{$sha256_cmd}</pre>";
-        ?>
-
-        <h2>SHA-512 Hash:</h2>
-        <?php
-        $sha512_cmd = shell_exec('sha512sum <<<' . $target);
-        echo "<pre>{$sha512_cmd}</pre>";
-        ?>
-
-        <h2>URI Encoding:</h2>
-        <pre><?php echo urlencode($target);?></pre>
-
-    <?php
+        
+        // Avoid shell_exec and use PHP functions
+        // Base64 Encoding
+        $base64_encoded = base64_encode($target);
+        echo "<h2>Base64 Encoding:</h2><pre>{$base64_encoded}</pre>";
+        
+        // MD5 Hash
+        $md5_hash = md5($target);
+        echo "<h2>MD5 Hash:</h2><pre>{$md5_hash}</pre>";
+        
+        // SHA-256 Hash
+        $sha256_hash = hash('sha256', $target);
+        echo "<h2>SHA-256 Hash:</h2><pre>{$sha256_hash}</pre>";
+        
+        // SHA-512 Hash
+        $sha512_hash = hash('sha512', $target);
+        echo "<h2>SHA-512 Hash:</h2><pre>{$sha512_hash}</pre>";
+        
+        // URI Encoding
+        $uri_encoded = urlencode($target);
+        echo "<h2>URI Encoding:</h2><pre>{$uri_encoded}</pre>";
     }
-    ?>
+    ?></pre>
+
+   
 </body>
 
 </html>
