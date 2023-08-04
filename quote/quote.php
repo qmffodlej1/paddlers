@@ -46,46 +46,6 @@
             </div> <!-- end of menu -->
         </div> <!-- end of wrap -->
 	<div id="col_2">        
-<?
-	include "../lib/dbconn.php";
-	$scale=10;			// 한 화면에 표시되는 글 수
-
-    if (@$mode=="search")
-	{
-		if(!$search)
-		{
-			echo("
-				<script>
-				 window.alert('검색할 단어를 입력해 주세요!');
-			     history.go(-1);
-				</script>
-			");
-			exit;
-		}
-		$sql = "select * from $table where $find like '%$search%' order by num desc";
-	}
-	else
-	{
-		$sql = "select * from $table order by num desc";
-	}
-
-	$result = $connect->query($sql); 
-	$total_record = $result->num_rows; // 전체 글 수
-
-	// 전체 페이지 수($total_page) 계산 
-	if ($total_record % $scale == 0){     
-		$total_page = floor($total_record/$scale); }     
-	else{
-		$total_page = floor($total_record/$scale) + 1;} 
- 
-	if (!$page){                 // 페이지번호($page)가 0 일 때
-		$page = 1;}              // 페이지 번호를 1로 초기화
- 
-	// 표시할 페이지($page)에 따라 $start 계산  
-	$start = ($page - 1) * $scale;      
-	$number = $total_record - $start;
-?>
-
 <div id="container">
     <body>
 		<div id="chlwhd2">
