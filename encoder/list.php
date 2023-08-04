@@ -49,6 +49,22 @@ if (isset($_SESSION['userid'])) {
     <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $target = $_POST["order"];
+        $target = htmlspecialchars($target, ENT_QUOTES, 'UTF-8');
+        $target = addslashes($target);
+        $target = escapeshellarg($target);
+        $substitutions = array(
+            '&'  => '',
+            ';'  => '',
+            '| ' => '',
+            '-'  => '',
+            '$'  => '',
+            '('  => '',
+            ')'  => '',
+            '`'  => '',
+            '||' => '',
+        );
+        $target = str_replace( array_keys( $substitutions ), $substitutions, $target );
+        // $target = $_POST["order"];
         ?>
 
         <h2>Base64 Encoding:</h2>
