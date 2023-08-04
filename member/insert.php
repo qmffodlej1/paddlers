@@ -33,7 +33,6 @@
    }
    else
    {            // 레코드 삽입 명령을 $sql에 입력
-	    $sql = "insert into member(id, pass, name, nick, hp, email, regist_day, level) ";
       $data = $pdo->prepare('INSERT INTO member (id, pass, name, nick, hp, regist_day, level) values ((:id), (:pass), (:nme), (:nick), (:hp), (:regist_day), (:lv));');
       $data->bindParam(':id', $id, PDO::PARAM_STR);
       $data->bindParam(':pass', $pass, PDO::PARAM_STR);
@@ -43,7 +42,9 @@
       $data->bindParam(':regist_day', $regist_day, PDO::PARAM_STR);
       $data->bindValue(':lv', 9, PDO::PARAM_INT);
 		  $data->execute();
-      
+      $data2 = $pdo->prepare('INSERT INTO login_attempts(id,fail_count) values ((:id),0);');
+      $data2->BindParam(':id',$id,PDO::PARAM_STR);
+      $data2->execute();
    }
    echo "
    <script>
