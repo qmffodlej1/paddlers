@@ -81,9 +81,8 @@ create table member (
   regist_day char(20),
   level int,
   last_login TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  failed_login INT(3) defualt null,
+  failed_login INT(3),
   primary key(id)
-
   );create table memo (
    num int not null auto_increment,
    id char(15) not null,
