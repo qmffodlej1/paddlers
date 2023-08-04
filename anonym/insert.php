@@ -40,10 +40,8 @@ if (isset($_SESSION['userid']))
 
  	if ($mode=="modify")
 	{
-		$sql = "select * from $table where num=$num";   // get target record
-		$result = $connect->query($sql);
-		$row = $result->fetch_array(MYSQLI_ASSOC);
-
+		$content = htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
+		$subject = htmlspecialchars($subject, ENT_QUOTES, 'UTF-8');
 		$sql = "update $table set subject='$subject', content='$content' where num='$num'";
 		$connect->query($sql);  // $sql 에 저장된 명령 실행
 	}
@@ -56,7 +54,8 @@ if (isset($_SESSION['userid']))
 		else
 		{
 			$is_html = "";
-			$content = htmlspecialchars($content);
+			$content = htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
+			$subject = htmlspecialchars($subject, ENT_QUOTES, 'UTF-8');
 		}
 
 		$sql = "insert into $table (id, name, nick, subject, content, regist_day, hit, is_html)";
