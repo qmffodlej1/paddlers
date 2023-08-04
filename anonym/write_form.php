@@ -22,13 +22,6 @@
 	
 		$item_subject     = $row['subject'];
 		$item_content     = $row['content'];
-		$item_file_0 = $row['file_name_0'];
-		$item_file_1 = $row['file_name_1'];
-		$item_file_2 = $row['file_name_2'];
-
-		$copied_file_0 = $row['file_copied_0'];
-		$copied_file_1 = $row['file_copied_1'];
-		$copied_file_2 = $row['file_copied_2'];
 	}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -37,7 +30,7 @@
 <meta charset="utf-8">
 <link href="../css/common.css" rel="stylesheet" type="text/css" media="all">
 <link href="../css/board4.css" rel="stylesheet" type="text/css" media="all">
-<!-- <script>
+<script>
   function check_input()
    {
       if (!document.board_form.subject.value)
@@ -55,7 +48,7 @@
       }
       document.board_form.submit();
    }
-</script> -->
+</script>
 </head>
 <div id="container">
     <body>
@@ -115,35 +108,6 @@
 			<div id="write_row3"><h3>내용</h3><textarea class="dog" name="content"><?=@$item_content?></textarea></div>
 			<div class="write_line"></div>
 		</div>
-		<div id="dkdsid">
-			<div id="write_row4"><div class="col4"><h3>이미지파일1</h3><input type="file" name="upfile[]"></div></div>
-<? 	if ($mode=="modify" && $item_file_0)
-	{
-?>
-			<div class="delete_ok"><?=$item_file_0?><h3>파일이 있습니다.</h3><input type="checkbox" name="del_file[]" value="0"><a>삭제</a></div>
-			<div class="clear"></div>
-<?
-	}
-?>
-			<div id="write_row4"><div class="col4"><h3>이미지파일2</h3> <input type="file" name="upfile[]"></div></div>
-<? 	if ($mode=="modify" && $item_file_1)
-	{
-?>
-			<div class="delete_ok"><?=$item_file_1?><a>파일이 등록되어 있습니다.</a><input type="checkbox" name="del_file[]" value="1"><a>삭제</a></div>
-			<div class="clear"></div>
-<?
-	}
-?>
-			<div class="clear"></div>
-			<div id="write_row4"><div class="col4"><h3>이미지파일3</h3><input type="file" name="upfile[]"></div></div>
-<? 	if ($mode=="modify" && $item_file_2)
-	{
-?>
-			<div class="delete_ok"><?=$item_file_2?><a>파일이 등록되어 있습니다.</a><input type="checkbox" name="del_file[]" value="2"><a>삭제</a></div>
-			<div class="clear"></div>
-<?
-	}
-?>
 
 			<div class="clear"></div>
 			
