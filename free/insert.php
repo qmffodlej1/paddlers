@@ -52,7 +52,7 @@ if (isset($_SESSION['userid']))
 		");
 	 exit;
 	}
-	$file_name = preg_replace('/[^A-Za-z0-9_]/', '', $upfile_name[$i]);
+	$file_name = preg_replace('/[^A-Za-z0-9_]/', '', @$upfile_name[$i]);
 
 	$regist_day = date("Y-m-d (H:i)");  // 현재의 '년-월-일-시-분'을 저장
 
@@ -158,9 +158,11 @@ if (isset($_SESSION['userid']))
 		}
 	    }
 
-		$sql = "select * from $table where num=$num";   // get target record
-		$result = $connect->query($sql);
-		$row = $result->fetch_array(MYSQLI_ASSOC);
+		$data = $pdo->prepare('select * from (:table) where num=(:num);');
+		$data->BindParam(':table',$table,PDO::PARAM_STR);
+		$data->BindParam(':num',$num,PDO::PARAM_INT);
+		$data->execute();
+		$row = $data->fetch_array(MYSQLI_ASSOC);
 
 		for ($i=0; $i<$count; $i++)					// update DB with the value of file input box
 		{
@@ -178,20 +180,34 @@ if (isset($_SESSION['userid']))
 
 				unlink($delete_path);
             
-				$sql = "update $table set $field_org_name = '$org_name_value', $field_real_name = '$org_real_value'  where num='$num'";
-				$connect->query($sql);  // $sql 에 저장된 명령 실행
+				$data = $pdo->prepare('update (:table) set (:field_org_name) = (:org_name_value), $field_real_name = (:org_real_value)  where num= (:num);');
+				$data->BindParam(':table',$table,PDO::PARAM_STR);
+				$data->BindParam(':field_org_name',$field_org_name,PDO::PARAM_STR);
+				$data->BindParam(':org_name_value',$org_name_value,PDO::PARAM_STR);
+				$data->BindParam(':org_real_value',$org_real_value,PDO::PARAM_STR);
+				$data->BindParam(':num',$num,PDO::PARAM_INT);
+				$data->execute();
 			}
 			else
 			{
 				if (!$upfile_error[$i])
 				{
-					$sql = "update $table set $field_org_name = '$org_name_value', $field_real_name = '$org_real_value'  where num='$num'";
-					$connect->query($sql);  // $sql 에 저장된 명령 실행					
+					$data = $pdo->prepare('update (:table) set (:field_org_name) = (:org_name_value), $field_real_name = (:org_real_value)  where num= (:num);');
+					$data->BindParam(':table',$table,PDO::PARAM_STR);
+					$data->BindParam(':field_org_name',$field_org_name,PDO::PARAM_STR);
+					$data->BindParam(':org_name_value',$org_name_value,PDO::PARAM_STR);
+					$data->BindParam(':org_real_value',$org_real_value,PDO::PARAM_STR);
+					$data->BindParam(':num',$num,PDO::PARAM_INT);
+					$data->execute();			
 				}
 			}
 		}
-		$sql = "update $table set subject='$subject', content='$content' where num='$num'";
-		$connect->query($sql);  // $sql 에 저장된 명령 실행
+		$data = $pdo->prepare('update (:table) set subject= (:subject), content= (:content) where num= (:num);');
+		$data->BindParam(':table',$table,PDO::PARAM_STR);
+		$data->BindParam(':subject',$subject,PDO::PARAM_STR);
+		$data->BindParam(':content',$content,PDO::PARAM_STR);
+		$data->BindParam(':num',$num,PDO::PARAM_INT);
+		$data->execute();			
 	}
 	else
 	{
@@ -205,13 +221,23 @@ if (isset($_SESSION['userid']))
 			$content = htmlspecialchars($content);
 		}
 
-		$sql = "insert into $table (id, name, nick, subject, content, regist_day, hit, is_html, ";
-		$sql .= " file_name_0, file_name_1, file_name_2, file_copied_0,  file_copied_1, file_copied_2) ";
-		$sql .= "values('$userid', '$username', '$usernick', '$subject', '$content', '$regist_day', 0, '$is_html', ";
-		$sql .= "'$upfile_name[0]', '$upfile_name[1]',  '$upfile_name[2]', '$copied_file_name[0]', '$copied_file_name[1]','$copied_file_name[2]')";
-		$connect->query($sql);  // $sql 에 저장된 명령 실행
+		$data = $pdo->prepare('insert into '.$table.' (id, name, nick, subject, content, regist_day, hit, is_html, file_name_0, file_name_1, file_name_2, file_copied_0,  file_copied_1, file_copied_2) values (:userid, :username, :usernick, :subject, :content, :regist_day, 0, :is_html, :upfile_name_0, :upfile_name_1, :upfile_name_2, :copied_file_name_0, :copied_file_name_1, :copied_file_name_2);');
+		$data->BindParam(':userid',$userid,PDO::PARAM_STR);
+		$data->BindParam(':username',$username,PDO::PARAM_STR);
+		$data->BindParam(':usernick',$usernick,PDO::PARAM_STR);
+		$data->BindParam(':subject',$subject,PDO::PARAM_STR);
+		$data->BindParam(':content',$content,PDO::PARAM_STR);
+		$data->BindParam(':regist_day',$regist_day,PDO::PARAM_STR);
+		$data->BindParam(':is_html',$is_html,PDO::PARAM_STR);
+		$data->BindParam(':upfile_name_0',$upfile_name[0],PDO::PARAM_STR);
+		$data->BindParam(':upfile_name_1',$upfile_name[1],PDO::PARAM_STR);
+		$data->BindParam(':upfile_name_2',$upfile_name[2],PDO::PARAM_STR);
+		$data->BindParam(':copied_file_name_0',$copied_file_name[0],PDO::PARAM_STR);
+		$data->BindParam(':copied_file_name_1',$copied_file_name[1],PDO::PARAM_STR);
+		$data->BindParam(':copied_file_name_2',$copied_file_name[2],PDO::PARAM_STR);
+		$data->execute();
 	}
-	$connect->close();                // DB 연결 끊기
+	$pdo = null;             // DB 연결 끊기
 
 	echo "
 	   <script>
