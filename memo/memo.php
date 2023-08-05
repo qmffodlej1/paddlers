@@ -15,10 +15,10 @@ $search = $_POST['search'];
 }
 $scale = 5; // 한 화면에 표시되는 글 수
 include "../lib/dbconn.php";
-$sql = "select * from $table order by num desc";
-$result = $connect->query($sql);
-$total_record = $result->num_rows;
-
+$data = $pdo->prepare('SELECT * FROM ' . $table . ' ORDER BY num DESC;');
+$data->execute();
+$rows = $data->fetchAll(PDO::FETCH_ASSOC);
+$total_record = count($rows);
 // 전체 페이지 수($total_page) 계산 
 if ($total_record % $scale == 0)
     $total_page = floor($total_record / $scale);
@@ -63,7 +63,10 @@ function displayMemo($number, $memo_nick, $memo_date, $memo_content, $memo_id, $
 			include "../lib/dbconn.php";
             $sql = "select * from memo_ripple where parent='$memo_num'";
             $ripple_result = $connect->query($sql);
-            while ($row_ripple = $ripple_result->fetch_array(MYSQLI_ASSOC)) {
+            $data = $pdo->prepare('SELECT * FROM memo_ripple WHERE parent=(:memo_num);');
+            $data->bindParam(':memo_num',$memo_num,PDO::PARAM_INT);
+            $data->execute();
+            while ($row_ripple = $data->fetch(PDO::FETCH_ASSOC)) {
                 $ripple_num = $row_ripple['num'];
                 $ripple_id = $row_ripple['id'];
                 $ripple_nick = $row_ripple['nick'];
@@ -155,8 +158,9 @@ function displayMemo($number, $memo_nick, $memo_date, $memo_content, $memo_id, $
             <div id="col_2">
                 <?php
                 for ($i = $start; $i < $start + $scale && $i < $total_record; $i++) {
-                    $result->data_seek($i);
-                    $row = $result->fetch_array(MYSQLI_ASSOC);
+                    $data_memo=$pdo->prepare('SELECT * FROM memo;');
+                    $data_memo->data_seek($i);
+                    $row = $result->fetch(PDO::FETCH_ASSOC);
                     $memo_id = $row['id'];
                     $memo_num = $row['num'];
                     $memo_date = $row['regist_day'];

@@ -44,19 +44,19 @@ $search = isset($_POST['search']) ? $_POST['search'] : '';
 	// $nick = htmlspecialchars($nick, ENT_QUOTES, 'UTF-8');
 	$content = htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
 	
-	$sql = "select * from member where id='$userid'";
-	$result = $connect->query($sql);
-	
-	$row = $result->fetch_array(MYSQLI_ASSOC);
+	$data = $pdo->prepare('SELECT * FROM member WHERE id = (:id);');
+	$data->bindParam(':id', $userid, PDO::PARAM_STR);
+	$data->execute();
+	$row = $data->fetch(PDO::FETCH_ASSOC);
 	$name = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
 	$nick = htmlspecialchars($row['nick'], ENT_QUOTES, 'UTF-8');
 	
-	$sql = "insert into memo (id, name, nick, content, regist_day) ";
-	$sql .= "values('$userid', '$name', '$nick', '$content', '$regist_day')";
-	
-	$result = $connect->query($sql);
-	$connect->close();                // DB 연결 끊기
-	
+	$data_insert =$pdo->prepare('insert into memo (id, name, nick, content, regist_day) valus (:userid), (:name),(:nick),(:content),(:regist_day);');
+	$data_insert->bindParam(':userid',$userid,PDO::PARAM_STR);
+	$data_insert->bindParam(':name',$name,PDO::PARAM_STR);
+	$data_insert->bindParam(':nick',$nick,PDO::PARAM_STR);
+	$data_insert->bindParam(':content',$content,PDO::PARAM_STR);
+	$data_insert->bindParam(':regist_day',$regist_day,PDO::PARAM_STR);
 	echo "<script>
 			location.href = 'memo.php';
 		  </script>";
