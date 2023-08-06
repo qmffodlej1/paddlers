@@ -1,192 +1,196 @@
-<?
-	session_start();
-	@$page = $_GET['page'];
-	if (isset($_SESSION['userid'])) 
-	{
-			$userid = $_SESSION['userid'];
-			$username = $_SESSION['username'];
-			$usernick = $_SESSION['usernick'];
-			$userlevel = $_SESSION['userlevel'];
-	}
-	
+<? 
+	session_start(); 
 	$table = "free";
-	$ripple = "free_ripple";
-	if (isset($_GET['mode'])) {
-	$mode = $_GET['mode'];
-	$find = $_POST['find'];
-	$search = $_POST['search'];
-	}
-?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head> 
-<meta charset="utf-8">
-<link href="../css/common.css" rel="stylesheet" type="text/css" media="all">
-<link href="../css/board4.css" rel="stylesheet" type="text/css" media="all">
-</head>
-<?
-	include "../lib/dbconn.php";
-	$scale=10;			// 한 화면에 표시되는 글 수
+	$mode = @$_GET['mode'];
+	$num = @$_GET['num'];
+	$page = @$_GET['page'];
 
-    if (@$mode=="search")
+	$html_ok = @$_POST['html_ok'];
+	$subject = @$_POST['subject'];
+	$content = @$_POST['content'];
+	$upfile = @$_POST['upfile'];
+
+
+if (isset($_SESSION['userid'])) 
+{
+		$userid = $_SESSION['userid'];
+		$username = $_SESSION['username'];
+		$usernick = $_SESSION['usernick'];
+		$userlevel = $_SESSION['userlevel'];
+
+}
+?>
+
+
+<meta charset="utf-8">
+<?
+	if(!$userid) {
+		echo("
+		<script>
+	     window.alert('로그인 후 이용해 주세요.')
+	     history.go(-1)
+	   </script>
+		");
+		exit;
+	}
+	if(!$subject) {
+		echo("
+	   <script>
+	     window.alert('제목을 입력하세요.')
+	     history.go(-1)
+	   </script>
+		");
+	 exit;
+	}
+
+	if(!$content) {
+		echo("
+	   <script>
+	     window.alert('내용을 입력하세요.')
+	     history.go(-1)
+	   </script>
+		");
+	 exit;
+	}
+
+	$regist_day = date("Y-m-d (H:i)");  // 현재의 '년-월-일-시-분'을 저장
+
+	// 다중 파일 업로드
+	$files = $_FILES["upfile"];
+	$count = count($files["name"]);
+	$upload_dir = './data/';
+
+	for ($i=0; $i<$count; $i++)
 	{
-		if(!$search)
-		{ ?>
+		$upfile_name[$i]     = $files["name"][$i];
+		$upfile_tmp_name[$i] = $files["tmp_name"][$i];
+		$upfile_type[$i]     = $files["type"][$i];
+		$upfile_size[$i]     = $files["size"][$i];
+		$upfile_error[$i]    = $files["error"][$i];
+      
+		$file = explode(".", $upfile_name[$i]);
+		$file_name = @$file[0];
+		$file_ext  = @$file[1];
+
+		if (!$upfile_error[$i])
+		{
+			$new_file_name = date("Y_m_d_H_i_s");
+			$new_file_name = $new_file_name."_".$i;
+			$copied_file_name[$i] = $new_file_name.".".$file_ext;      
+			$uploaded_file[$i] = $upload_dir.$copied_file_name[$i];
+
+			if( $upfile_size[$i]  > 500000 ) {
+				echo("
 				<script>
-				window.alert('검색할 단어를 입력해 주세요!');
-				window.location.href = 'list.php';
-				</script> 
-		<?php
+				alert('업로드 파일 크기가 지정된 용량(500KB)을 초과합니다!<br>파일 크기를 체크해주세요! ');
+				history.go(-1)
+				</script>
+				");
+				exit;
+			}
+
+			if ( ($upfile_type[$i] != "image/gif") &&
+				($upfile_type[$i] != "image/jpeg") &&
+				($upfile_type[$i] != "image/pjpeg") &&
+				($upfile_type[$i] != "image/png"))
+			{
+				echo("
+					<script>
+						alert('JPG와 GIF 이미지 파일만 업로드 가능합니다!');
+						history.go(-1)
+					</script>
+					");
+				exit;
+			}
+
+			if (!move_uploaded_file($upfile_tmp_name[$i], $uploaded_file[$i]) )
+			{
+				echo("
+					<script>
+					alert('파일을 지정한 디렉토리에 복사하는데 실패했습니다.');
+					history.go(-1)
+					</script>
+				");
+				exit;
+			}
 		}
-		$data_search = $pdo->prepare('SELECT * FROM anyonym WHERE (:find) LIKE (:search) ORDER BY num desc');
-		$data_search->bindParam('find',$find,PDO::PARAM_STR);
-		$searchTerm = '%' . $search . '%';
-		$data_search->bindParam(':search', $searchTerm, PDO::PARAM_STR);
+	}
+
+	include "../lib/dbconn.php";       // dconn.php 파일을 불러옴
+
+ 	if ($mode=="modify")
+	{
+		if(isset($_POST['del_file']) && empty($_POST['del_file'])) {
+		$num_checked = count($_POST['del_file']);
+		$position = $_POST['del_file'];
+		
+		for($i=0; $i<$num_checked; $i++)                      // delete checked item
+		{
+			$index = $position[$i];
+			$del_ok[$index] = "y";
+		}
+	    }
+
+		$sql = "select * from $table where num=$num";   // get target record
+		$result = $connect->query($sql);
+		$row = $result->fetch_array(MYSQLI_ASSOC);
+
+		for ($i=0; $i<$count; $i++)					// update DB with the value of file input box
+		{
+
+			$field_org_name = "file_name_".$i;
+			$field_real_name = "file_copied_".$i;
+
+			$org_name_value = $upfile_name[$i];
+			$org_real_value = $copied_file_name[$i];
+			if ($del_ok[$i] == "y")
+			{
+				$delete_field = "file_copied_".$i;
+				$delete_name = $row['$delete_field'];				
+				$delete_path = "./data/".$delete_name;
+
+				unlink($delete_path);
+            
+				$sql = "update $table set $field_org_name = '$org_name_value', $field_real_name = '$org_real_value'  where num='$num'";
+				$connect->query($sql);  // $sql 에 저장된 명령 실행
+			}
+			else
+			{
+				if (!$upfile_error[$i])
+				{
+					$sql = "update $table set $field_org_name = '$org_name_value', $field_real_name = '$org_real_value'  where num='$num'";
+					$connect->query($sql);  // $sql 에 저장된 명령 실행					
+				}
+			}
+		}
+		$sql = "update $table set subject='$subject', content='$content' where num='$num'";
+		$connect->query($sql);  // $sql 에 저장된 명령 실행
 	}
 	else
 	{
-		$data_search = $pdo->prepare('SELECT * FROM anyonym ORDER BY num desc');
-	}
-
-	$data_search->execute();
-	$total_record = $data_search->rowCount();
-
-	// 전체 페이지 수($total_page) 계산 
-	if ($total_record % $scale == 0){     
-		$total_page = floor($total_record/$scale); }     
-	else{
-		$total_page = floor($total_record/$scale) + 1;} 
- 
-	if (!$page){                 // 페이지번호($page)가 0 일 때
-		$page = 1;}              // 페이지 번호를 1로 초기화
- 
-	// 표시할 페이지($page)에 따라 $start 계산  
-	$start = ($page - 1) * $scale;      
-	$number = $total_record - $start;
-?>
-<div id="container">
-    <body>
-        <header class="header">
-		<a href="../index.php"> <!-- 로고를 클릭하면 현재 페이지(index.php)로 연결되도록 설정 -->
-                <img src="../img/logo2.png" class="logo" alt="로고">
-            </a>
-            <?php
-            if (empty($userid)) {
-                echo '<div id="top_login"><a href="../login/login_form.php">로그인</a> | <a href="../member/member_form.php">회원가입</a></div>';
-            } else {
-                echo '<div id="top_login">' . $usernick . ' (level: ' . $userlevel . ') | <a href="../login/logout.php">로그아웃</a> | <a href="../login/member_form_modify.php">정보수정</a></div>';
-            }
-            ?>
-        </header>
-		<div id="body">
-        <div id="wrap">
-            <div id="menu">
-                <?php include "../lib/top_menu2.php"; ?>
-            </div> <!-- end of menu -->
-        </div> <!-- end of wrap -->
-	<div id="col_2">        
-	<div id="title">
-			<h1>자유게시판</h1>
-		</div>
-		<form  name="board_form" method="post" action="list.php?mode=search"> 
-		<div id="list_search">
-			<div id="list_search1">▷ 총 <?= $total_record ?> 개의 게시물이 있습니다.  </div>
-			<div id="list_search2"><b><a>SELECT</a></b></div>
-			<div id="list_search3">
-				<select class="inpung" name="find">
-                    <option value='subject'>제목</option>
-                    <option value='content'>내용</option>
-                    <option value='nick'>별명</option>
-                    <option value='name'>이름</option>
-				</select></div>
-				<form id="searchForm" action="list.php?mode=search" method="post">
-					<div id="list_search4">
-						<input class="inpung" type="text" name="search">
-					</div>
-					<div id="list_search5">
-    					<input type="submit" class="button_3" value="검색">
-					</div>
-				</form>
-		</form>
-		<div class="clear"></div>
-		<div id="list">
-		<div id="list_top_title">
-			<ul>
-				<li id="list_title1"><h3>번호</h3></li>
-				<li id="list_title2"><h3>제목</h3></li>
-				<li id="list_title3"><h3>글쓴이</h3></li>
-				<li id="list_title4"><h3>등록일</h3></li>
-				<li id="list_title5"><h3>조회</h3></li>
-			</ul>		
-		</div>
-<?		
-$total_record = $data_search->rowCount();
-for ($i = 0; $i < $scale && ($row = $data_search->fetch(PDO::FETCH_ASSOC)); $i++) {
-	// 하나의 레코드 가져오기
-	$item_num     = $row['num'];
-	$item_id      = $row['id'];
-	$item_name    = $row['name'];
-	$item_nick    = $row['nick'];
-	$item_hit     = $row['hit'];
-	$item_date    = substr($row['regist_day'], 0, 10);
-	$item_subject = str_replace(" ", "&nbsp;", $row['subject']);
-
-	  $sql = "select * from $ripple where parent=$item_num";
-	  $result2 = $connect->query($sql);
-	  $num_ripple = $result2->num_rows;
-      
-
-	  ?>		<div id="list_content">
-	  <div id="list_item">
-		  <ul>
-		  <li id="list_item1"><?= $number ?></li>
-		  <li style="cursor:pointer" onclick="location.href='view.php?num=<?=$item_num?>&page=<?=$page?>'" id="list_item2"><?= $item_subject ?></li>
-		  <li div id="list_item3"><?= $item_nick ?></li>
-		  <li div id="list_item4"><?= $item_date ?></li>
-		  <li div id="list_item5"><?= $item_hit ?></li>
-		  </ul>
-	  </div>
-	 </div>
-<?
-   	   $number--;
-   }
-?>
-			<div id="page_button">
-				<div id="page_num"> ◀ 이전 &nbsp;&nbsp;&nbsp;&nbsp; 
-<?
-   // 게시판 목록 하단에 페이지 링크 번호 출력
-   for ($i=1; $i<=$total_page; $i++)
-   {
-		if ($page == $i)     // 현재 페이지 번호 링크 안함
+		if ($html_ok=="y")
 		{
-			echo "<b> $i </b>";
+			$is_html = "y";
 		}
 		else
-		{ 
-			echo "<a href='list.php?table=$table&page=$i'> $i </a>";
-		}      
-   }
-?>			
-			&nbsp;&nbsp;&nbsp;&nbsp;다음 ▶
-				</div>
-				<div id="button">
-					<a href="list.php?table=<?=$table?>&page=<?=$page?>"><input href="#" type=button class="button_3" value="목록"></a>&nbsp;
-<? 
-	if(@$userid)
-	{
-?>
-		<input onclick="location.href='write_form.php'" type=button class="button_3" value="글쓰기">
-<?
+		{
+			$is_html = "";
+			$content = htmlspecialchars($content);
+		}
+
+		$sql = "insert into $table (id, name, nick, subject, content, regist_day, hit, is_html, ";
+		$sql .= " file_name_0, file_name_1, file_name_2, file_copied_0,  file_copied_1, file_copied_2) ";
+		$sql .= "values('$userid', '$username', '$usernick', '$subject', '$content', '$regist_day', 0, '$is_html', ";
+		$sql .= "'$upfile_name[0]', '$upfile_name[1]',  '$upfile_name[2]', '$copied_file_name[0]', '$copied_file_name[1]','$copied_file_name[2]')";
+		$connect->query($sql);  // $sql 에 저장된 명령 실행
 	}
+	$connect->close();                // DB 연결 끊기
+
+	echo "
+	   <script>
+	    location.href = 'list.php?table=$table&page=$page';
+	   </script>
+	";
 ?>
-				</div>
-			</div> <!-- end of page_button -->		
-        </div> <!-- end of list content -->
-		<div class="clear"></div>
 
-	</div> <!-- end of col2 -->
-  </div> <!-- end of content -->
-</div> <!-- end of wrap -->
-
-</body>
-</html>
+  
