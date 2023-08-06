@@ -28,42 +28,41 @@
     function check_input()
     {
         if (!document.member_form.id.value) {
-            ("아이디를 입력하세요")
+            window.alert("아이디를 입력하세요");
             document.member_form.id.focus();
             return false;
         }
         if (!document.member_form.pass.value) {
-            alert("비밀번호를 입력하세요");    
+            window.alert("비밀번호를 입력하세요");    
             document.member_form.pass.focus();
             return false;
         }
         if (!document.member_form.pass_confirm.value) {
-            alert("비밀번호확인을 입력하세요");    
+            window.alert("비밀번호확인을 입력하세요");    
             document.member_form.pass_confirm.focus();
             return false;
         }
         if (!document.member_form.name.value) {
-            alert("이름을 입력하세요");    
+            window.alert("이름을 입력하세요");    
             document.member_form.name.focus();
             return false;
         }
         if (!document.member_form.nick.value) {
-            alert("닉네임을 입력하세요");    
+            window.alert("닉네임을 입력하세요");    
             document.member_form.nick.focus();
             return false;
         }
         if (!document.member_form.hp2.value || !document.member_form.hp3.value ){
-            alert("휴대폰 번호를 입력하세요");    
+            window.alert("휴대폰 번호를 입력하세요");    
             document.member_form.nick.focus();
             return false;
         }
         if (document.member_form.pass.value != document.member_form.pass_confirm.value) {
-            alert("비밀번호가 일치하지 않습니다.\n다시 입력해주세요.");    
+            window.alert("비밀번호가 일치하지 않습니다.\n다시 입력해주세요.");    
             document.member_form.pass.focus();
             document.member_form.pass.select();
             return false;
         }
-        document.member_form.submit();
         return true;
     }
 
@@ -89,7 +88,7 @@
         bar.style.background = '#98FB98' ;
     } 
     else if (value.length >= minLength) {
-        bar.style.background = 'linear-gradient(to right, #98FB98 50%, transparent 50%)';
+        bar.style.background = 'linear-gradient(to right, #f3f588 50%, transparent 50%)';
     } 
     else {
     bar.style.background = 'transparent';
@@ -99,6 +98,7 @@
     const bar = document.querySelector('.bar_pass');
     const minLength = 10;
     let strength = 0; // 비밀번호 강도
+
     // 조건에 따라 강도를 측정하여 strength 변수에 반영
     if (/\d/.test(value)) {
         strength++;
@@ -107,34 +107,51 @@
         strength++;
     }
     if (/[A-Z]/.test(value)) {
-    strength++;
+        strength++;
+    }
     if (/\W/.test(value)) {
-    strength++;
+        strength++;
     }
+    if (value.length >= minLength) {
+        strength++;
     }
+
     // 강도에 따라 바(bar)의 배경색 변경
-    if (value.length >= minLength && strength === 1) {
-        bar.style.background = 'linear-gradient(to right, #F08080 25%, transparent 25%)';
-    } else if (value.length >= minLength && strength === 2) {
-        bar.style.background = 'linear-gradient(to right, #ffca66 50%, transparent 50%)';
-    } else if (value.length >= minLength && strength === 3) {
-        bar.style.background = 'linear-gradient(to right, #f3f588 75%, transparent 75%)';
-    } else if (value.length >= minLength && strength >= 4) {
+    if (strength === 1) {
+        bar.style.background = 'linear-gradient(to right, #F08080 20%, transparent 20%)';
+    } else if (strength === 2) {
+        bar.style.background = 'linear-gradient(to right, #ffca66 40%, transparent 40%)';
+    } else if (strength === 3) {
+        bar.style.background = 'linear-gradient(to right, #f3f588 60%, transparent 60%)';
+    } else if (strength === 4) {
+        bar.style.background = 'linear-gradient(to right, #f3f588 80%, transparent 80%)';
+    } else if (strength === 5) {
         bar.style.background = '#98FB98';
     } else {
         bar.style.background = 'transparent';
     }
 }
+
+    function complexity_id() {
+    const bar = document.getElementById('idcheckbar');
+    const computedStyle = window.getComputedStyle(bar);
+    if (computedStyle.backgroundColor !== 'rgb(152, 251, 152)') {
+        window.alert('숫자와 영문을 포함하여 8자리 이상 만들어주세요!!');
+        document.member_form.id.focus();
+    }
+    }
+    function complexity_pass() {
+    const bar = document.getElementById('passcheckbar');
+    const computedStyle = window.getComputedStyle(bar);
+    if (computedStyle.backgroundColor !== 'rgb(152, 251, 152)') {
+        window.alert('숫자와 영어 대/소 특수문자을 포함하여 10자리 이상 만들어주세요.');
+        document.member_form.pass.focus();
+        }
+    }
+
 </script>
 <div id="container">
     <body>
-    <script>
-        function showConfirmation() {
-
-                alert("회원가입완료!");
-
-        }
-    </script>
         <header class="header">
 		<a href="../index.php"> <!-- 로고를 클릭하면 현재 페이지(index.php)로 연결되도록 설정 -->
                 <img src="../img/logo2.png" class="logo" alt="로고">
@@ -166,19 +183,19 @@
                 <input type="text" name="id" class="input_12_1" oninput="idcheckbar(this.value)">
             </td>
             <td>
-                <div class="bar_id"></div>
+                <div class="bar_id" id="idcheckbar"></div>
             </tb>
-            <td id="id3">
+            <td id="id3_id">
                 ↳ 영문과 숫자를 조합하여 8자 이상 입력하세요. 
             </td>
         </tr>
         <tr>
             <td>비밀번호</td>
-            <td>
+            <td>complexity_id() 
                 <input type="password" name="pass" class="input_12_2" oninput="passcheckbar(this.value)">
             </td>
             <td>
-                <div class="bar_pass"></div>
+            <div class="bar_pass" id="passcheckbar"></div>
             </td>
             <td id="id3">
             ↳영문 대/소문자, 특수 문자, 숫자를 입력하여 10글자 이상을 입력하세요.
@@ -229,8 +246,8 @@
 			<div class="clear"></div>
             <div id="buttong" class="center-bottom">
             <a href="#">
-                <input type="button" class="button_1" onclick="showConfirmation(),check_input().call(this)" value="회원가입">
-            </a>&nbsp;&nbsp;
+    <input type="button" class="button_1" onclick="if(check_input() && complexity_id() && complexity_pass() ) document.member_form.submit();" value="회원가입">
+            </a>
 		    <a href="#"><input type="button" class="button_1" onclick="reset_form()" value="리셋"></a>
 	    </form>
         </div>

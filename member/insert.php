@@ -22,15 +22,12 @@
   $row = $data->fetch();
 
 
-   if(isset($row['id'])) {
-     echo("
+   if(isset($row['id'])) { ?>
            <script>
-             window.alert('해당 아이디가 존재합니다.')
-             history.go(-1)
+             window.alert('해당 아이디가 존재합니다 : '<? echo $row['id']; ?>)
            </script>
-         ");
-         exit;
-   }
+        <?
+        }
    else
    {            // 레코드 삽입 명령을 $sql에 입력
       $data = $pdo->prepare('INSERT INTO member (id, pass, name, nick, hp, regist_day, level) values ((:id), (:pass), (:nme), (:nick), (:hp), (:regist_day), (:lv));');
