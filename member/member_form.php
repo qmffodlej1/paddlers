@@ -86,10 +86,10 @@
     const bar = document.querySelector('.bar_id');
     const minLength = 8;
     if ((value.length >= minLength) && (/\d/.test(value) && /[a-zA-Z]/.test(value))) {
-        bar.style.background = 'green' ;
+        bar.style.background = '#98FB98' ;
     } 
     else if (value.length >= minLength) {
-        bar.style.background = 'linear-gradient(to right, green 50%, transparent 50%)';
+        bar.style.background = 'linear-gradient(to right, #98FB98 50%, transparent 50%)';
     } 
     else {
     bar.style.background = 'transparent';
@@ -114,13 +114,13 @@
     }
     // 강도에 따라 바(bar)의 배경색 변경
     if (value.length >= minLength && strength === 1) {
-        bar.style.background = 'linear-gradient(to right, red 25%, transparent 25%)';
+        bar.style.background = 'linear-gradient(to right, #F08080 25%, transparent 25%)';
     } else if (value.length >= minLength && strength === 2) {
-        bar.style.background = 'linear-gradient(to right, orange 50%, transparent 50%)';
+        bar.style.background = 'linear-gradient(to right, #ffca66 50%, transparent 50%)';
     } else if (value.length >= minLength && strength === 3) {
-        bar.style.background = 'linear-gradient(to right, yellow 75%, transparent 75%)';
+        bar.style.background = 'linear-gradient(to right, #f3f588 75%, transparent 75%)';
     } else if (value.length >= minLength && strength >= 4) {
-        bar.style.background = 'green';
+        bar.style.background = '#98FB98';
     } else {
         bar.style.background = 'transparent';
     }
