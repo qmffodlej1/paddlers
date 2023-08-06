@@ -373,6 +373,62 @@ S
 	display: block;
 	size: 1;
 }
+.input_12_1{
+	height: 20px;
+	width: 90%;
+	border: 1px solid #b4b4b4;
+	padding: 10px;
+	border-radius: 60px;
+	display: block;
+	size: 1;
+}
+.input_12_2{
+	height: 20px;
+	width: 90%;
+	border: 1px solid #b4b4b4;
+	padding: 10px;
+	border-radius: 60px;
+	display: block;
+	size: 1;
+}
+.bar_id {
+	position: relative;
+	width: 90%;
+	height: 10px;
+	border: 2px solid black; /* 테두리를 투명색으로 설정합니다. */
+	border-radius: 5px; /* 테두리의 둥글기를 조절합니다. */
+	overflow: hidden; /* 바깥으로 넘치는 부분은 보이지 않도록 설정합니다. */
+}
+.bar_id::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	background-color: green;
+	transition: width 0.3s;
+	width: 0%;
+	border-left: 1px solid black;
+}
+.bar_pass {
+	position: relative;
+	width: 90%;
+	height: 10px;
+	border: 2px solid black; /* 테두리를 투명색으로 설정합니다. */
+	border-radius: 5px; /* 테두리의 둥글기를 조절합니다. */
+	overflow: hidden; /* 바깥으로 넘치는 부분은 보이지 않도록 설정합니다. */
+}
+.bar_pass::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	background-color: green;
+	transition: width 0.3s;
+	width: 0%;
+	border-left: 1px solid black;
+}
 .input_2{ 
 	height: 45px;
 	width: 20%;
