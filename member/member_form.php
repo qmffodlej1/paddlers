@@ -132,22 +132,28 @@
     }
 }
 
-    function complexity_id() {
+function complexity_id() {
     const bar = document.getElementById('idcheckbar');
     const computedStyle = window.getComputedStyle(bar);
     if (computedStyle.backgroundColor !== 'rgb(152, 251, 152)') {
         window.alert('숫자와 영문을 포함하여 8자리 이상 만들어주세요!!');
         document.member_form.id.focus();
+        return false; // 강도가 조건을 충족하지 않으므로 거짓(false) 반환
     }
-    }
-    function complexity_pass() {
+    return true; // 강도가 조건을 충족하므로 참(true) 반환
+}
+
+function complexity_pass() {
     const bar = document.getElementById('passcheckbar');
     const computedStyle = window.getComputedStyle(bar);
+    const strength = passcheckbar(document.member_form.pass.value);
     if (computedStyle.backgroundColor !== 'rgb(152, 251, 152)') {
-        window.alert('숫자와 영어 대/소 특수문자을 포함하여 10자리 이상 만들어주세요.');
+        window.alert('숫자와 영어 대/소문자, 특수문자를 포함하여 10자리 이상으로 만들어주세요.');
         document.member_form.pass.focus();
-        }
+        return false; // 강도가 조건을 충족하지 않으므로 거짓(false) 반환
     }
+    return true; // 강도가 조건을 충족하므로 참(true) 반환
+}
 
 </script>
 <div id="container">
