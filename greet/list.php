@@ -39,7 +39,8 @@
 		}
 		$data_search = $pdo->prepare('SELECT * FROM greet WHERE (:find) LIKE (:search) ORDER BY num desc');
 		$data_search->bindParam('find',$find,PDO::PARAM_STR);
-		$data_search->bindParam(':search','%$search%',PDO::PARAM_STR);
+		$searchTerm = '%' . $search . '%';
+		$data_search->bindParam(':search', $searchTerm, PDO::PARAM_STR);
 	}
 	else
 	{
