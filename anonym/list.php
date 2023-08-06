@@ -9,8 +9,8 @@
 			$userlevel = $_SESSION['userlevel'];
 	}
 	
-	$table = "anonym";
-	$ripple = "anonym_ripple";
+	$table = "free";
+	$ripple = "free_ripple";
 	if (isset($_GET['mode'])) {
 	$mode = $_GET['mode'];
 	$find = $_POST['find'];
@@ -38,15 +38,17 @@
 				</script> 
 		<?php
 		}
-		$sql = "select * from $table where $find like '%$search%' order by num desc";
+		$data_search = $pdo->prepare('SELECT * FROM free WHERE (:find) LIKE (:search) ORDER BY num desc');
+		$data_search->bindParam('find',$find,PDO::PARAM_STR);
+		$data_search->bindParam(':search','%$search%',PDO::PARAM_STR);
 	}
 	else
 	{
-		$sql = "select * from $table order by num desc";
+		$data_search = $pdo->prepare('SELECT * FROM free ORDER BY num desc');
 	}
 
-	$result = $connect->query($sql); 
-	$total_record = $result->num_rows; // 전체 글 수
+	$data_search->execute();
+	$total_record = $data_search->rowCount();
 
 	// 전체 페이지 수($total_page) 계산 
 	if ($total_record % $scale == 0){     
@@ -82,11 +84,10 @@
             </div> <!-- end of menu -->
         </div> <!-- end of wrap -->
 	<div id="col_2">        
-		<div id="title">
-			<h1>익명게시판</h1>
+	<div id="title">
+			<h1>자유게시판</h1>
 		</div>
-
-		<form  name="board_form" method="post" action="list.php?table=<?=$table?>&mode=search"> 
+		<form  name="board_form" method="post" action="list.php?mode=search"> 
 		<div id="list_search">
 			<div id="list_search1">▷ 총 <?= $total_record ?> 개의 게시물이 있습니다.  </div>
 			<div id="list_search2"><b><a>SELECT</a></b></div>
@@ -105,10 +106,9 @@
     					<input type="submit" class="button_3" value="검색">
 					</div>
 				</form>
-		</div>
 		</form>
-
 		<div class="clear"></div>
+		<div id="list">
 		<div id="list_top_title">
 			<ul>
 				<li id="list_title1"><h3>번호</h3></li>
@@ -118,34 +118,29 @@
 				<li id="list_title5"><h3>조회</h3></li>
 			</ul>		
 		</div>
-
-		<div id="list_content">
 <?		
-
-   for ($i=$start; $i<$start+$scale && $i < $total_record; $i++)                    
-   {
-      $result->data_seek($i);
-      $row = $result->fetch_array(MYSQLI_ASSOC);
-      //$row = mysql_fetch_array($result); // 하나의 레코드 가져오기	      
-	  $item_num     = $row['num'];
-	  $item_id      = $row['id'];
-	  $item_name    = $row['name'];
-  	  $item_nick    = $row['nick'];
-	  $item_hit     = $row['hit'];
-      $item_date    = $row['regist_day'];
-	  $item_date = substr($item_date, 0, 10);  
-	  $item_subject = str_replace(" ", "&nbsp;", $row['subject']);
+$total_record = $data_search->rowCount();
+for ($i = 0; $i < $scale && ($row = $data_search->fetch(PDO::FETCH_ASSOC)); $i++) {
+	// 하나의 레코드 가져오기
+	$item_num     = $row['num'];
+	$item_id      = $row['id'];
+	$item_name    = $row['name'];
+	$item_nick    = $row['nick'];
+	$item_hit     = $row['hit'];
+	$item_date    = substr($row['regist_day'], 0, 10);
+	$item_subject = str_replace(" ", "&nbsp;", $row['subject']);
 
 	  $sql = "select * from $ripple where parent=$item_num";
 	  $result2 = $connect->query($sql);
 	  $num_ripple = $result2->num_rows;
       
+
 	  ?>		<div id="list_content">
 	  <div id="list_item">
 		  <ul>
 		  <li id="list_item1"><?= $number ?></li>
 		  <li style="cursor:pointer" onclick="location.href='view.php?num=<?=$item_num?>&page=<?=$page?>'" id="list_item2"><?= $item_subject ?></li>
-		  <li div id="list_item3">익명</li>
+		  <li div id="list_item3"><?= $item_nick ?></li>
 		  <li div id="list_item4"><?= $item_date ?></li>
 		  <li div id="list_item5"><?= $item_hit ?></li>
 		  </ul>
@@ -170,18 +165,18 @@
 			echo "<a href='list.php?table=$table&page=$i'> $i </a>";
 		}      
    }
-   ?>			
-   &nbsp;&nbsp;&nbsp;&nbsp;다음 ▶
-	   </div>
-	   <div id="button">
-		   <a href="list.php?page=<?=$page?>"><input href="#" type=button class="button_3" value="목록"></a>&nbsp;
+?>			
+			&nbsp;&nbsp;&nbsp;&nbsp;다음 ▶
+				</div>
+				<div id="button">
+					<a href="list.php?table=<?=$table?>&page=<?=$page?>"><input href="#" type=button class="button_3" value="목록"></a>&nbsp;
 <? 
-if(@$userid)
-{
+	if(@$userid)
+	{
 ?>
-<input onclick="location.href='write_form.php'" type=button class="button_3" value="글쓰기">
-<?php
-}
+		<input onclick="location.href='write_form.php'" type=button class="button_3" value="글쓰기">
+<?
+	}
 ?>
 				</div>
 			</div> <!-- end of page_button -->		
