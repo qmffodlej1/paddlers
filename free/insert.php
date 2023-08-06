@@ -158,8 +158,7 @@ if (isset($_SESSION['userid']))
 		}
 	    }
 
-		$data = $pdo->prepare('select * from (:table) where num=(:num);');
-		$data->BindParam(':table',$table,PDO::PARAM_STR);
+		$data = $pdo->prepare('select * from '.$table.' where num=(:num);');
 		$data->BindParam(':num',$num,PDO::PARAM_INT);
 		$data->execute();
 		$row = $data->fetch_array(MYSQLI_ASSOC);
@@ -180,8 +179,7 @@ if (isset($_SESSION['userid']))
 
 				unlink($delete_path);
             
-				$data = $pdo->prepare('update (:table) set (:field_org_name) = (:org_name_value), $field_real_name = (:org_real_value)  where num= (:num);');
-				$data->BindParam(':table',$table,PDO::PARAM_STR);
+				$data = $pdo->prepare('update '.$table.' set (:field_org_name) = (:org_name_value), $field_real_name = (:org_real_value)  where num= (:num);');
 				$data->BindParam(':field_org_name',$field_org_name,PDO::PARAM_STR);
 				$data->BindParam(':org_name_value',$org_name_value,PDO::PARAM_STR);
 				$data->BindParam(':org_real_value',$org_real_value,PDO::PARAM_STR);
@@ -192,8 +190,7 @@ if (isset($_SESSION['userid']))
 			{
 				if (!$upfile_error[$i])
 				{
-					$data = $pdo->prepare('update (:table) set (:field_org_name) = (:org_name_value), $field_real_name = (:org_real_value)  where num= (:num);');
-					$data->BindParam(':table',$table,PDO::PARAM_STR);
+					$data = $pdo->prepare('update '.$table.' set (:field_org_name) = (:org_name_value), $field_real_name = (:org_real_value)  where num= (:num);');
 					$data->BindParam(':field_org_name',$field_org_name,PDO::PARAM_STR);
 					$data->BindParam(':org_name_value',$org_name_value,PDO::PARAM_STR);
 					$data->BindParam(':org_real_value',$org_real_value,PDO::PARAM_STR);
