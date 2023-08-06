@@ -57,23 +57,24 @@
 		</div>
 		<div class="clear"></div>
 
-		<form  name="board_form" method="post" action="insert.php?mode=modify&num=<?=$num?>&page=<?=$page?>"> 
-		<div id="write_form">
-			<div id="write_row1">
-				<div class="col1"><h3>닉네임:</h3> <h3><?=$usernick?></h3></div>
-				<div class="col1"><input type="checkbox" name="html_ok" value="y"><h3>HTML 쓰기</h3></div>
-			</div>
-			<div class="write_line"></div>
-			<div id="write_row2"><h3>제목</h3><input class="cat" type="text" name="subject" value="<?=$item_subject?>"></div>
-			<div class="write_line"></div>
-			<div id="write_row3"><h3>내용</h3><textarea class="dog" rows="15" cols="79" name="content"><?=$item_content?></textarea></div>
-			<div class="write_line"></div>
-		</div>
+		<form name="board_form" method="post" action="insert.php?mode=modify&num=<?=$num?>&page=<?=$page?>">
+  		<div id="write_form">
+    <div id="write_row1">
+      <div class="col1"><h3>닉네임:</h3> <h3><?=$usernick?></h3></div>
+      <div class="col1"><input type="checkbox" name="html_ok" value="y"><h3>HTML 쓰기</h3></div>
+    </div>
+    <div class="write_line"></div>
+    <div id="write_row2"><h3>제목</h3><input class="cat" type="text" name="subject" value="<?=$item_subject?>"></div>
+    <div class="write_line"></div>
+    <div id="write_row3"><h3>내용</h3><textarea class="dog" rows="15" cols="79" name="content"><?=$item_content?></textarea></div>
+    <div class="write_line"></div>
+  </div>
 
-		<div id="write_button"><button type="submit" class="button_3">완료</button>&nbsp;
-								<a href="list.php?page=<?=$page?>"><input type="button" class="button_3" value="목록"></a>
-		</div>
-		</form>
+  <div id="write_button">
+    <input type="submit" class="button_3" value="완료">&nbsp;
+	<a href="list.php?page=<?=$page?>"><input type="button" value="목록" class="button_3"></a>
+  </div>
+</form>
 
 	</div> <!-- end of col2 -->
   </div> <!-- end of content -->
