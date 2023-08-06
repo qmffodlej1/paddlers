@@ -72,7 +72,7 @@ create table greet (
 );
 
 create table member (
-  id    char(15) not null,
+  id    char(45) not null,
   pass  char(15) not null,
   name  char(10) not null,
   nick  char(10) not null,
@@ -82,7 +82,7 @@ create table member (
   primary key(id)
   );
 CREATE TABLE login_attempts (
-  id         CHAR(15) NOT NULL,
+  id         CHAR(45) NOT NULL,
   fail_count INT default 0,
   lock_time  TIMESTAMP default 0,
   FOREIGN KEY (id) REFERENCES member(id)
