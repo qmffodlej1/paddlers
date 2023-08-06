@@ -79,8 +79,52 @@
         document.member_form.email1.value = "";
         document.member_form.email2.value = "";
         document.member_form.id.focus();
+        
         return;
     }
+    function idcheckbar(value) {
+    const bar = document.querySelector('.bar_id');
+    const minLength = 8;
+    if ((value.length >= minLength) && (/\d/.test(value) && /[a-zA-Z]/.test(value))) {
+        bar.style.background = 'green' ;
+    } 
+    else if (value.length >= minLength) {
+        bar.style.background = 'linear-gradient(to right, green 50%, transparent 50%)';
+    } 
+    else {
+    bar.style.background = 'transparent';
+    }
+    }
+    function passcheckbar(value) {
+    const bar = document.querySelector('.bar_pass');
+    const minLength = 10;
+    let strength = 0; // 비밀번호 강도
+    // 조건에 따라 강도를 측정하여 strength 변수에 반영
+    if (/\d/.test(value)) {
+        strength++;
+    }
+    if (/[a-z]/.test(value)) {
+        strength++;
+    }
+    if (/[A-Z]/.test(value)) {
+    strength++;
+    if (/\W/.test(value)) {
+    strength++;
+    }
+    }
+    // 강도에 따라 바(bar)의 배경색 변경
+    if (value.length >= minLength && strength === 1) {
+        bar.style.background = 'linear-gradient(to right, red 25%, transparent 25%)';
+    } else if (value.length >= minLength && strength === 2) {
+        bar.style.background = 'linear-gradient(to right, orange 50%, transparent 50%)';
+    } else if (value.length >= minLength && strength === 3) {
+        bar.style.background = 'linear-gradient(to right, yellow 75%, transparent 75%)';
+    } else if (value.length >= minLength && strength >= 4) {
+        bar.style.background = 'green';
+    } else {
+        bar.style.background = 'transparent';
+    }
+}
 </script>
 <div id="container">
     <body>
@@ -119,21 +163,28 @@
         <tr>
             <td>아이디</td>
             <td>
-                    <input type="text" name="id" class="input_12">
+                <input type="text" name="id" class="input_12_1" oninput="idcheckbar(this.value)">
+            </td>
+            <td>
+                <div class="bar_id"></div>
+            </tb>
+            <td id="id3">
+                ↳ 영문과 숫자를 조합하여 8자 이상 입력하세요. 
             </td>
         </tr>
         <tr>
             <td>비밀번호</td>
             <td>
-            <input type="password" name="pass" class="input_12">
+                <input type="password" name="pass" class="input_12_2" oninput="passcheckbar(this.value)">
+            </td>
+            <td>
+                <div class="bar_pass"></div>
+            </td>
+            <td id="id3">
+            ↳영문 대/소문자, 특수 문자, 숫자를 입력하여 10글자 이상을 입력하세요.
             </td>
         </tr>
         <tr>
-            <td>
-            </td>
-            <td id="id3">
-            ↳ 4~12자의 영문 소문자, 숫자와 특수기호(_) 만 사용할 수 있습니다.
-            </td>
         </tr>
         <tr>
             <td id="id3">
