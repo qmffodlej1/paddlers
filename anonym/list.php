@@ -38,13 +38,13 @@
 				</script> 
 		<?php
 		}
-		$data_search = $pdo->prepare('SELECT * FROM free WHERE (:find) LIKE (:search) ORDER BY num desc');
+		$data_search = $pdo->prepare('SELECT * FROM anyonym WHERE (:find) LIKE (:search) ORDER BY num desc');
 		$data_search->bindParam('find',$find,PDO::PARAM_STR);
 		$data_search->bindParam(':search','%$search%',PDO::PARAM_STR);
 	}
 	else
 	{
-		$data_search = $pdo->prepare('SELECT * FROM free ORDER BY num desc');
+		$data_search = $pdo->prepare('SELECT * FROM anyonym ORDER BY num desc');
 	}
 
 	$data_search->execute();
