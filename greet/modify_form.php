@@ -2,6 +2,8 @@
 	session_start(); 
 	include "../lib/dbconn.php";
 	$num = $_GET['num'];
+	$table = $_GET['table'];
+	$page = $_GET['page'];
 
 	$sql = "select * from greet where num=$num";
 	$result = $connect->query($sql);
@@ -58,7 +60,7 @@
 		<div class="clear"></div>
 
 		<form name="board_form" method="post" action="insert.php?mode=modify&num=<?=$num?>&page=<?=$page?>">
-  		<div id="write_form">
+  <div id="write_form">
     <div id="write_row1">
       <div class="col1"><h3>닉네임:</h3> <h3><?=$usernick?></h3></div>
       <div class="col1"><input type="checkbox" name="html_ok" value="y"><h3>HTML 쓰기</h3></div>
@@ -75,7 +77,6 @@
 	<a href="list.php?page=<?=$page?>"><input type="button" value="목록" class="button_3"></a>
   </div>
 </form>
-
 	</div> <!-- end of col2 -->
   </div> <!-- end of content -->
 </div> <!-- end of wrap -->
