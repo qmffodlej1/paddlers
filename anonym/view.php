@@ -87,16 +87,6 @@ $connect->query($sql);
 						<div class="clear"></div> <!-- 부유(floating) 문제 방지를 위한 추가적인 엘리먼트 -->
 					</div>
 					<div id="view_content">
-						<?
-						for ($i=0; $i<3; $i++) {
-							if ($image_copied[$i]) {
-								$img_name = $image_copied[$i];
-								$img_name = "./data/".$img_name;
-								$img_width = $image_width[$i];
-								echo "<img src='$img_name' width='$img_width'>"."<br><br>";
-							}
-						}?>
-					<?= $item_content ?>
 					</div>
 
 					<div id="ripple">
