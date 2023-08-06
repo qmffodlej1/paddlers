@@ -38,15 +38,17 @@
 				</script> 
 		<?php
 		}
-		$sql = "select * from $table where $find like '%$search%' order by num desc";
+		$data_search = $pdo->prepare('SELECT * FROM free WHERE (:find) LIKE (:search) ORDER BY num desc');
+		$data_search->bindParam('find',$find,PDO::PARAM_STR);
+		$data_search->bindParam(':search','%$search%',PDO::PARAM_STR);
 	}
 	else
 	{
-		$sql = "select * from $table order by num desc";
+		$data_search = $pdo->prepare('SELECT * FROM free ORDER BY num desc');
 	}
 
-	$result = $connect->query($sql); 
-	$total_record = $result->num_rows; // 전체 글 수
+	$data_search->execute();
+	$total_record = $data_search->rowCount();
 
 	// 전체 페이지 수($total_page) 계산 
 	if ($total_record % $scale == 0){     
@@ -117,19 +119,16 @@
 			</ul>		
 		</div>
 <?		
-   for ($i=$start; $i<$start+$scale && $i < $total_record; $i++)                    
-   {
-      $result->data_seek($i);
-      $row = $result->fetch_array(MYSQLI_ASSOC);
-      //$row = mysql_fetch_array($result); // 하나의 레코드 가져오기	      
-	  $item_num     = $row['num'];
-	  $item_id      = $row['id'];
-	  $item_name    = $row['name'];
-  	  $item_nick    = $row['nick'];
-	  $item_hit     = $row['hit'];
-      $item_date    = $row['regist_day'];
-	  $item_date = substr($item_date, 0, 10);  
-	  $item_subject = str_replace(" ", "&nbsp;", $row['subject']);
+$total_record = $data_search->rowCount();
+for ($i = 0; $i < $scale && ($row = $data_search->fetch(PDO::FETCH_ASSOC)); $i++) {
+	// 하나의 레코드 가져오기
+	$item_num     = $row['num'];
+	$item_id      = $row['id'];
+	$item_name    = $row['name'];
+	$item_nick    = $row['nick'];
+	$item_hit     = $row['hit'];
+	$item_date    = substr($row['regist_day'], 0, 10);
+	$item_subject = str_replace(" ", "&nbsp;", $row['subject']);
 
 	  $sql = "select * from $ripple where parent=$item_num";
 	  $result2 = $connect->query($sql);
