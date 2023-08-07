@@ -197,7 +197,7 @@ function complexity_pass() {
         </tr>
         <tr>
             <td>비밀번호</td>
-            <td>complexity_id() 
+            <td>
                 <input type="password" name="pass" class="input_12_2" oninput="passcheckbar(this.value)">
             </td>
             <td>
