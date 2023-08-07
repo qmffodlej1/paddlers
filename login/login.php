@@ -1,4 +1,5 @@
 <?
+date_default_timezone_set('Asia/Seoul');
 include "../lib/dbconn.php";
 session_start();
 $id = $_POST['id'];
