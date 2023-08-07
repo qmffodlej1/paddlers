@@ -87,6 +87,7 @@ $connect->query($sql);
 						<div class="clear"></div> <!-- 부유(floating) 문제 방지를 위한 추가적인 엘리먼트 -->
 					</div>
 					<div id="view_content">
+					<?= $item_content ?>
 					</div>
 
 					<div id="ripple">

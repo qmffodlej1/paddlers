@@ -9,8 +9,8 @@
 			$userlevel = $_SESSION['userlevel'];
 	}
 	
-	$table = "free";
-	$ripple = "free_ripple";
+	$table = "anonym";
+	$ripple = "anonym_ripple";
 	if (isset($_GET['mode'])) {
 	$mode = $_GET['mode'];
 	$find = $_POST['find'];
@@ -84,7 +84,7 @@
         </div> <!-- end of wrap -->
 	<div id="col_2">        
 	<div id="title">
-			<h1>자유게시판</h1>
+			<h1>익명게시판</h1>
 		</div>
 		<form  name="board_form" method="post" action="list.php?mode=search"> 
 		<div id="list_search">
@@ -139,7 +139,7 @@ for ($i = 0; $i < $scale && ($row = $data_search->fetch(PDO::FETCH_ASSOC)); $i++
 		  <ul>
 		  <li id="list_item1"><?= $number ?></li>
 		  <li style="cursor:pointer" onclick="location.href='view.php?num=<?=$item_num?>&page=<?=$page?>'" id="list_item2"><?= $item_subject ?></li>
-		  <li div id="list_item3"><?= $item_nick ?></li>
+		  <li div id="list_item3">익명</li>
 		  <li div id="list_item4"><?= $item_date ?></li>
 		  <li div id="list_item5"><?= $item_hit ?></li>
 		  </ul>
