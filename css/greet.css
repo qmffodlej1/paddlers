@@ -70,11 +70,10 @@
 #list_top_title {
     text-align: left;
     height: 40px; /* 높이를 늘려서 각 항목이 세로로 정렬되도록 합니다. */
-    width: 1890px;
+    width: 100%;
     border-top: solid 2px #aaaaaa;
 	border-bottom: dotted 2px #aaaaaa;
     margin-bottom: 3px;
-    display: flex;
     align-items: center; /* 내부 항목들을 수직 중앙 정렬합니다. */
 }
 
