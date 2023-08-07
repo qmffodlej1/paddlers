@@ -121,6 +121,22 @@
 
 	include "../lib/dbconn.php"; // dconn.php 파일을 불러옴
 	if ($mode == "modify") {
+
+		$sql = "select * from download where num=$num";
+		$result = $connect->query($sql);
+		$row = $result->fetch_array(MYSQLI_ASSOC);
+		$item_id = $row['id'];
+
+		if(!$userid != $item_id) {
+			echo("
+			<script>
+			 window.alert('글쓴이 정보가 일치하지 안습니다.')
+			 history.go(-2)
+		   </script>
+			");
+			exit;
+		}
+
 		if(isset($_POST['del_file']) && empty($_POST['del_file'])) {
 		$num_checked = count($_POST['del_file']);
 		$position = $_POST['del_file'];
