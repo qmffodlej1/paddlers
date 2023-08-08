@@ -16,6 +16,14 @@
 		$usernick = $_SESSION['usernick'];
 		$userlevel = $_SESSION['userlevel'];
 	}
+	function checkFileSignature($filePath, $allowedSignatures)
+	{
+		$file = fopen($filePath, "rb");
+		$signature = fread($file, 4);
+		fclose($file);
+	
+		return in_array($signature, $allowedSignatures);
+	}
 ?>
 
 <meta charset="utf-8">
@@ -62,6 +70,7 @@
 
 	$file_name = preg_replace('/[^A-Za-z0-9_]/', '', $upfile_name[$i]);
 
+	$allowedSignatures = array("\x50\x4B\x03\x04");
 	for ($i = 0; $i < $count; $i++) {
 		$upfile_name[$i]     = $files["name"][$i];
 		$upfile_tmp_name[$i] = $files["tmp_name"][$i];
@@ -69,6 +78,7 @@
 		$upfile_size[$i]     = $files["size"][$i];
 		$upfile_error[$i]    = $files["error"][$i];
 
+	
 		if ($upfile_error[$i] === UPLOAD_ERR_NO_FILE) {
 			// 파일이 없을 경우, 처리를 원하는 방식으로 작성
 			$copied_file_name[$i] = "";
@@ -81,6 +91,17 @@
 		@$file_ext  = strtolower($file[1]);
 
 		
+		if (!checkFileSignature($upfile_tmp_name[$i], $allowedSignatures)) {
+			echo "
+			<script>
+				alert('slbal허용되지 않는 파일 형식입니다. Zip 파일만 업로드 가능합니다.');
+				history.go(-1);
+			</script>
+			";
+			exit;
+		}
+
+
 	    if (!in_array($file_ext, $allowed_extensions)) {
 			echo("
 			<script>
