@@ -17,6 +17,7 @@
 			$usernick = $_SESSION['usernick'];
 			$userlevel = $_SESSION['userlevel'];
 	}
+	if(@$userid != 'admin') {
 	if(@$userid != $item_id) {
 			echo("
 			<script>
@@ -25,7 +26,7 @@
 		   </script>
 			");
 			exit;
-		}
+		}}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
