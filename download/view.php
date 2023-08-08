@@ -95,20 +95,17 @@ $result = mysqli_query($connect, $sql);
 		<div class="clear"></div>
 		<div id="view_content">
     <?= $item_content ?>
+		</div>
     <!-- 자료 다운로드 링크를 추가합니다 -->
     <div id="download_links">
-        <?php
-        for ($i = 0; $i < 3; $i++) {
-            if ($file_name[$i] && $file_copied[$i]) {
-                echo '<p><a href="./data/' . $file_copied[$i] . '" target="_blank">다운로드 파일 ' . ($i + 1) . '</a></p>';
-            }
-        }
-        ?>
-    </div>
+			<?php
+			for ($i = 0; $i < 3; $i++) {
+				if ($file_name[$i] && $file_copied[$i]) {
+					echo '<p><input  class="button"type="button" value="다운로드 파일 ' . ($i + 1) . '" onclick="window.open(\'./data/' . $file_copied[$i] . '\', \'_blank\');"></p>';
+				}
+			}1
+?>
 </div>
-		<div id="view_content">
-			<?= $item_content ?>
-		</div>
 		<div id="view_button">
 				<a href="list.php?table=<?=$table?>&page=<?=$page?>"><button class="gkgkgk">목록</button></a>&nbsp;
 <? 
