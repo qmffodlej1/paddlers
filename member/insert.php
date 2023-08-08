@@ -30,9 +30,10 @@
         }
    else
    {            // 레코드 삽입 명령을 $sql에 입력
+      $hashedpass = hash("sha256", $pass);
       $data = $pdo->prepare('INSERT INTO member (id, pass, name, nick, hp, regist_day, level) values ((:id), (:pass), (:nme), (:nick), (:hp), (:regist_day), (:lv));');
       $data->bindParam(':id', $id, PDO::PARAM_STR);
-      $data->bindParam(':pass', $pass, PDO::PARAM_STR);
+      $data->bindParam(':pass', $hashedpass, PDO::PARAM_STR);
       $data->bindParam(':nme', $name, PDO::PARAM_STR);
       $data->bindParam(':nick', $nick, PDO::PARAM_STR);
       $data->bindParam(':hp', $hp, PDO::PARAM_STR);
