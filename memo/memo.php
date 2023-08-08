@@ -7,6 +7,7 @@ if (isset($_SESSION['userid']))
         $usernick = $_SESSION['usernick'];
         $userlevel = $_SESSION['userlevel'];
 }
+session_regenerate_id(true);
 $table = "memo";
 if (isset($_GET['mode'])) {
 $mode = $_GET['mode'];
