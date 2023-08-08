@@ -8,7 +8,7 @@
 			$usernick = $_SESSION['usernick'];
 			$userlevel = $_SESSION['userlevel'];
 	}
-	
+	session_regenerate_id(true);
 	$table = "free";
 	$ripple = "free_ripple";
 	if (isset($_GET['mode'])) {
