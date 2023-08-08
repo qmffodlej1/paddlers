@@ -12,7 +12,7 @@
 	}
    include "../lib/dbconn.php";
 
-   $sql = "select * from download where num=$num";
+   $sql = "select * from $table where num = $num";
 	$result = $connect->query($sql);
 	$row = $result->fetch_array(MYSQLI_ASSOC);
 	$item_id = $row['id'];
