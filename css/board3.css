@@ -574,3 +574,8 @@ input[type="file"]::file-selector-button {
 	display: inline-flex;
 	text-align: center;
   }
+  #download_links {
+	float: left;
+	color: #000;
+	
+  }
