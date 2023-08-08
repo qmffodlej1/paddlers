@@ -152,7 +152,7 @@ if (isset($_SESSION['userid']))
 		$row = $result->fetch_array(MYSQLI_ASSOC);
 		$item_id = $row['id'];
 		
-		if(!$userid != $item_id) {
+		if(@$userid != $item_id) {
 			echo("
 			<script>
 			 window.alert('글쓴이 정보가 일치하지 안습니다.')
