@@ -8,6 +8,7 @@
 			$usernick = $_SESSION['usernick'];
 			$userlevel = $_SESSION['userlevel'];
 	}
+	session_regenerate_id(true);
 	$table = "download";
 	if (isset($_GET['mode'])) {
         $mode = $_GET['mode'];
