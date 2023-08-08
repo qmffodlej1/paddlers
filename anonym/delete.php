@@ -15,6 +15,7 @@
 	$row = $result->fetch_array(MYSQLI_ASSOC);
 	$item_id = $row['id'];
 
+	if(@$userid != 'admin') {
 	if(@$userid != $item_id) {
 		echo("
 		<script>
@@ -23,7 +24,7 @@
 	   </script>
 		");
 		exit;
-	}
+	}}
    $sql = "select * from $table where num = '$num'";
    $result = $connect->query($sql);
 
