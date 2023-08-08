@@ -6,6 +6,7 @@ $id = $_POST['id'];
 $pass = $_POST['pass'];
 $id = stripslashes($id);
 $pass = stripslashes($pass);
+$hashedpass = hash("sha256", $pass);
 $table = "member";
 
 	$total_failed_login = 3;
@@ -64,7 +65,7 @@ else {
         history.go(-1)
       </script>
     ");
-    if($pass != $db_pass) {
+    if($hashedpass != $db_pass) {
     $data = $pdo->prepare( 'SELECT fail_count, lock_time FROM login_attempts WHERE id = (:id) LIMIT 1;' );
     $data->bindParam( ':id', $id, PDO::PARAM_STR );
     $data->execute();
