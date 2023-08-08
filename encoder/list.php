@@ -6,6 +6,7 @@ if (isset($_SESSION['userid'])) {
 	$usernick = $_SESSION['usernick'];
 	$userlevel = $_SESSION['userlevel'];
 }
+session_regenerate_id(true);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
