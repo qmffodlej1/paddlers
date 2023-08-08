@@ -94,6 +94,19 @@ $result = mysqli_query($connect, $sql);
 		</div>
 		<div class="clear"></div>
 		<div id="view_content">
+    <?= $item_content ?>
+    <!-- 자료 다운로드 링크를 추가합니다 -->
+    <div id="download_links">
+        <?php
+        for ($i = 0; $i < 3; $i++) {
+            if ($file_name[$i] && $file_copied[$i]) {
+                echo '<p><a href="./data/' . $file_copied[$i] . '" target="_blank">다운로드 파일 ' . ($i + 1) . '</a></p>';
+            }
+        }
+        ?>
+    </div>
+</div>
+		<div id="view_content">
 			<?= $item_content ?>
 		</div>
 		<div id="view_button">
