@@ -62,7 +62,8 @@ $search = $_POST['search'];
 		$result = $connect->query($sql);
 		$row = $result->fetch_array(MYSQLI_ASSOC);
 		$item_id = $row['id'];
-		
+
+		if(@$userid != 'admin') {
 		if(!$userid != $item_id) {
 			echo("
 			<script>
@@ -71,7 +72,7 @@ $search = $_POST['search'];
 	   		</script>
 			");
 			exit;
-		}
+		}}
 		$content = htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
 		$subject = htmlspecialchars($subject, ENT_QUOTES, 'UTF-8');
 		$sql = "update greet set subject='$subject', content='$content' where num=$num";
